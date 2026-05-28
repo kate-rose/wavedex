@@ -308,6 +308,7 @@ const CATEGORIES = [
   { id: 'marine',       label: 'Marine',                  color: '#1a7a68' },
   { id: 'amateur',      label: 'Amateur & APRS',          color: '#3a7a3a' },
   { id: 'utility',      label: 'Utility & Infrastructure',color: '#5a3a7a' },
+  { id: 'rail',         label: 'Railroad',                 color: '#7a5a1a' },
   { id: 'exotic',       label: 'Exotic / Aspirational',   color: '#8a2a14' },
 ];
 
@@ -540,6 +541,50 @@ const BIRDS = [
     catches: [],
   },
 
+  // ── RAILROAD ─────────────────────────────────────────────────────────────
+  {
+    id: 'bnsf-road',
+    name: 'BNSF ROAD',
+    full: 'BNSF Railway — Road Channel (Washington side)',
+    cat: 'rail',
+    freq: '160.260 MHz',
+    mode: 'FM',
+    desc: 'BNSF primary road channel for the Columbia Gorge corridor. Dispatcher and crew comms on the Washington bank. One of the busiest freight corridors in North America — grain, intermodal, tankers.',
+    catches: [
+      { date: "2026-05-28", location: "Columbia Gorge, WA", signal: "strong", notes: "160.252 MHz peak at -9.0 dB detected in scan of railroad band. Signal present on AAR Ch 6 — BNSF NW road frequency confirmed active." },
+    ],
+  },
+  {
+    id: 'up-road',
+    name: 'UP ROAD',
+    full: 'Union Pacific — Road Channel (Oregon side)',
+    cat: 'rail',
+    freq: '160.515 MHz',
+    mode: 'FM',
+    desc: 'UP runs the Oregon bank of the Gorge. Different channel plan from BNSF. Listen for crew change comms at Wishram and The Dalles.',
+    catches: [],
+  },
+  {
+    id: 'eot-device',
+    name: 'EOT / HOT',
+    full: 'End-of-Train / Head-of-Train Telemetry',
+    cat: 'rail',
+    freq: '161.550 MHz',
+    mode: 'Digital',
+    desc: 'Small transmitter on the rear of every freight train broadcasts brake pipe pressure, motion status, and marker light state every 60–70 seconds. Decodable — a passing train announces itself.',
+    catches: [],
+  },
+  {
+    id: 'amtrak',
+    name: 'AMTRAK',
+    full: 'Amtrak Passenger Operations',
+    cat: 'rail',
+    freq: '160.800 MHz',
+    mode: 'FM',
+    desc: 'Empire Builder (Chicago–Seattle) and Coast Starlight pass through the Gorge daily. Uses host railroad channels plus Amtrak ops frequencies. Crew comms are distinctive.',
+    catches: [],
+  },
+
   // ── EXOTIC / ASPIRATIONAL ────────────────────────────────────────────────
   {
     id: 'iridium',
@@ -694,6 +739,24 @@ function iconSignalBurst(s) {
   </g>`;
 }
 
+function iconTrack(s) {
+  return `<g stroke="${s}" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="54" y1="30" x2="54" y2="130" stroke-width="4"/>
+    <line x1="106" y1="30" x2="106" y2="130" stroke-width="4"/>
+    <line x1="36" y1="50"  x2="124" y2="50"  stroke-width="2.5"/>
+    <line x1="36" y1="68"  x2="124" y2="68"  stroke-width="2.5"/>
+    <line x1="36" y1="86"  x2="124" y2="86"  stroke-width="2.5"/>
+    <line x1="36" y1="104" x2="124" y2="104" stroke-width="2.5"/>
+    <line x1="36" y1="122" x2="124" y2="122" stroke-width="2.5"/>
+    <line x1="36" y1="32"  x2="124" y2="32"  stroke-width="2.5"/>
+    <rect x="44" y="44"  width="72" height="12" stroke-width="0" fill="${s}" opacity=".08"/>
+    <rect x="44" y="62"  width="72" height="12" stroke-width="0" fill="${s}" opacity=".08"/>
+    <rect x="44" y="80"  width="72" height="12" stroke-width="0" fill="${s}" opacity=".08"/>
+    <rect x="44" y="98"  width="72" height="12" stroke-width="0" fill="${s}" opacity=".08"/>
+    <rect x="44" y="116" width="72" height="12" stroke-width="0" fill="${s}" opacity=".08"/>
+  </g>`;
+}
+
 const CAT_ICON = {
   'weather-sat': iconWeatherSat,
   'space':       iconSpaceStation,
@@ -701,6 +764,7 @@ const CAT_ICON = {
   'marine':      iconVessel,
   'amateur':     iconTower,
   'utility':     iconGauge,
+  'rail':        iconTrack,
   'exotic':      iconSignalBurst,
 };
 
