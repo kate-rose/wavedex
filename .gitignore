@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python virtual environment
+backend/.venv/
+backend/__pycache__/
+backend/*.pyc
+**/__pycache__/
+
+# SDR recordings & decoded images (can be large — store locally)
+*.wav
+*.raw
+*.iq
+*.png
+*.jpg
+*.jpeg
+captures/
+recordings/
+
+# Android build artifacts
+app/build/
+.gradle/
+local.properties
+*.keystore
+*.jks
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Secrets — never commit these
+.env
+*.env
+secrets.properties

@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAVEDEX // ПОЛЕВОЙ ЖУРНАЛ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #0b1009;
+      --surface:      #131a10;
+      --surface2:     #1a2316;
+      --border:       #263320;
+      --text:         #7a9a6a;
+      --text-dim:     #445840;
+      --text-bright:  #c0d8a8;
+      --amber:        #c88c1a;
+      --amber-dim:    #6a4a0c;
+      --amber-glow:   rgba(200,140,26,0.18);
+      --rust:         #8a2a14;
+      --cold:         #2a4858;
+      --cold-bright:  #4a7a9a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse 65% 45% at 8% 18%,  rgba(22,42,16,0.55) 0%, transparent 65%),
+        radial-gradient(ellipse 45% 65% at 92% 82%,  rgba(12,22,32,0.45) 0%, transparent 65%),
+        radial-gradient(ellipse 100% 25% at 50% 105%, rgba(16,28,12,0.4)  0%, transparent 55%),
+        linear-gradient(rgba(26,46,20,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,46,20,0.06) 1px, transparent 1px);
+      background-size: auto, auto, auto, 44px 44px, 44px 44px;
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* CRT scanlines */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.035) 3px, rgba(0,0,0,0.035) 4px
+      );
+      pointer-events: none;
+      z-index: 9000;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      padding: 3.5rem 3.5rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .site-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 3.5rem; right: 3.5rem; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--amber-dim) 30%, var(--amber-dim) 70%, transparent);
+    }
+
+    .header-eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .header-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--text-bright);
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .header-title .slash { color: var(--amber); opacity: 0.7; }
+
+    .header-sub {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+    }
+
+    .header-meta {
+      margin-top: 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 2.5rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+    .header-meta b { color: var(--text); font-weight: normal; }
+
+    .cursor {
+      display: inline-block;
+      width: 7px; height: 0.85em;
+      background: var(--amber);
+      vertical-align: middle;
+      margin-left: 3px;
+      animation: blink 1.4s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 0.9rem 3.5rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+      flex-wrap: wrap;
+    }
+    .stat-val { color: var(--amber); }
+    .progress-track {
+      flex: 1; min-width: 80px; max-width: 180px;
+      height: 2px; background: var(--border); position: relative;
+    }
+    .progress-fill {
+      height: 100%; background: var(--amber);
+      box-shadow: 0 0 6px var(--amber);
+      transition: width 0.6s ease;
+    }
+
+    /* ── GALLERY GRID ── */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+      gap: 2.8rem 2rem;
+      padding: 3rem 3.5rem 5rem;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    /* ── CATEGORY DIVIDER ── */
+    .cat-header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .cat-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .cat-rule { flex: 1; height: 1px; }
+
+    /* ── BIRD CARD ── */
+    .bird-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      transition: transform 0.25s ease;
+      cursor: default;
+    }
+    .bird-card:hover { transform: translateY(-4px); }
+
+    .badge-wrap {
+      position: relative;
+      width: 152px; height: 152px;
+    }
+
+    .badge-svg {
+      width: 152px; height: 152px;
+      display: block;
+      transition: filter 0.3s;
+    }
+
+    /* Caught */
+    .bird-card.caught .badge-svg {
+      filter:
+        drop-shadow(0 0 7px rgba(200,140,26,0.55))
+        drop-shadow(0 0 22px rgba(200,140,26,0.18));
+    }
+
+    /* Uncaught */
+    .bird-card.uncaught .badge-svg {
+      filter: saturate(0.12) brightness(0.42);
+    }
+
+    /* Ghost stamp on uncaught */
+    .badge-wrap .ghost-stamp {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .bird-card.uncaught .ghost-stamp { opacity: 1; }
+    .ghost-stamp span {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: rgba(74,120,154,0.45);
+      border: 1px solid rgba(74,120,154,0.18);
+      padding: 0.15rem 0.5rem;
+      transform: rotate(-22deg);
+      display: block;
+      white-space: nowrap;
+    }
+
+    /* ── BIRD LABELS ── */
+    .bird-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.25;
+    }
+    .bird-card.caught  .bird-name { color: var(--text-bright); }
+    .bird-card.uncaught .bird-name { color: var(--text-dim); }
+
+    .bird-full {
+      font-size: 0.6rem;
+      letter-spacing: 0.04em;
+      text-align: center;
+      color: var(--text-dim);
+      line-height: 1.4;
+      max-width: 150px;
+    }
+
+    .bird-status {
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 0.18rem 0.55rem;
+      border: 1px solid;
+      margin-top: 0.1rem;
+    }
+    .bird-card.caught   .bird-status { color: var(--amber); border-color: var(--amber-dim); }
+    .bird-card.uncaught .bird-status { color: var(--text-dim); border-color: var(--border); }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-eyebrow">Columbia Gorge Listening Station · Skamania County, WA · 45.69°N 121.89°W</div>
+  <div class="header-title">WAVEDEX <span class="slash">//</span> ПОЛЕВОЙ ЖУРНАЛ</div>
+  <div class="header-sub">Signal Catalog &amp; Field Log · RTL-SDR Blog V4 · Est. 2026</div>
+  <div class="header-meta">
+    <span>OPERATOR <b>KB / WA</b></span>
+    <span>HARDWARE <b>RTL-SDR BLOG V4</b></span>
+    <span>ANTENNA <b>STOCK WHIP</b></span>
+    <span>INTERFACE <b>WAVEDEX MCP + CLAUDE</b></span>
+    <span>RANGE <b>500 kHz – 1.75 GHz</b></span>
+    <span>FIELD <b>COLUMBIA GORGE / HIGH DESERT CORRIDOR</b></span>
+    <span class="cursor"></span>
+  </div>
+</header>
+
+<div class="stats-bar" id="statsBar"></div>
+
+<div class="gallery" id="gallery"></div>
+
+<footer class="site-footer">
+  WAVEDEX ПОЛЕВОЙ ЖУРНАЛ · COLUMBIA GORGE STATION · ALL SIGNALS RECEIVED PASSIVELY · NO TRANSMISSIONS
+</footer>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+//  CATEGORIES
+// ─────────────────────────────────────────────────────────────────────────────
+const CATEGORIES = [
+  { id: 'weather-sat',  label: 'Weather Satellites',      color: '#b87c18' },
+  { id: 'space',        label: 'Space Station',           color: '#5a7a9a' },
+  { id: 'aviation',     label: 'Aviation',                color: '#3a6a8a' },
+  { id: 'marine',       label: 'Marine',                  color: '#1a7a68' },
+  { id: 'amateur',      label: 'Amateur & APRS',          color: '#3a7a3a' },
+  { id: 'utility',      label: 'Utility & Infrastructure',color: '#5a3a7a' },
+  { id: 'exotic',       label: 'Exotic / Aspirational',   color: '#8a2a14' },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  BIRD CATALOG
+//  To log a catch, add an entry to the bird's `catches` array:
+//  { date: "2026-05-28", location: "Columbia Gorge, WA", elevation: 31.9, notes: "Clean LRPT decode", signal: "strong" }
+//  `location` is optional but recommended — especially useful for field trips away from home base.
+// ─────────────────────────────────────────────────────────────────────────────
+const BIRDS = [
+
+  // ── WEATHER SATELLITES ──────────────────────────────────────────────────
+  {
+    id: 'noaa-15',
+    name: 'NOAA-15',
+    full: 'NOAA-15 Weather Satellite',
+    cat: 'weather-sat',
+    freq: '137.620 MHz',
+    mode: 'APT',
+    desc: 'Polar orbiting NOAA weather satellite. Analog APT image downlink, ~4 km/px. Launched 1998. Low passes from northern arc.',
+    catches: [
+      { date: "2026-05-26", location: "Columbia Gorge, WA", elevation: 16.5, signal: "faint", notes: "Degraded transmitter — launched 1998, showing age. Sync stripe faintly visible on left edge only. Low SW grazing pass, indoors, gain 33.8 dB. First capture of session." },
+    ],
+  },
+  {
+    id: 'noaa-18',
+    name: 'NOAA-18',
+    full: 'NOAA-18 Weather Satellite',
+    cat: 'weather-sat',
+    freq: '137.912 MHz',
+    mode: 'APT',
+    desc: 'Strongest APT signal of the active NOAA polar orbiters. Excellent cloud imagery over Pacific Northwest.',
+    catches: [
+      { date: "2026-05-26", location: "Columbia Gorge, WA", elevation: 68.9, signal: "faint", notes: "Caught from peak onward after NOAA-19 set at 11:02 PM. ~6 min recording. Faint texture variation in center suggests signal present. USB 3.0 noise and PSU harmonic comb at 137 MHz identified as primary interference. Gain 28.0 dB." },
+    ],
+  },
+  {
+    id: 'noaa-19',
+    name: 'NOAA-19',
+    full: 'NOAA-19 Weather Satellite',
+    cat: 'weather-sat',
+    freq: '137.100 MHz',
+    mode: 'APT',
+    desc: 'Newest NOAA polar orbiter. Good signal, reliable. Cascade snowpack and coast cloud cover visible on high passes.',
+    catches: [
+      { date: "2026-05-26", location: "Columbia Gorge, WA", elevation: 19.9, signal: "faint", notes: "Noise-dominated, slight sync structure over NOAA-15. SE approach, indoors, gain 33.8 dB. Recording pipeline froze on first attempt — force-quit required. Second attempt successful." },
+      { date: "2026-05-26", location: "Columbia Gorge, WA", elevation: 69.7, signal: "fair", notes: "Nearly overhead pass — best NOAA capture of session. Faint geographic smear visible center-right. USB 3.0 noise blob and PSU harmonic comb at 137 MHz identified as primary indoor interference. Gain reduced to 28.0 dB after sweep optimization." },
+    ],
+  },
+  {
+    id: 'meteor-m2',
+    name: 'METEOR-M2',
+    full: 'Meteor-M № 2 · Метеор-М № 2',
+    cat: 'weather-sat',
+    freq: '137.900 MHz',
+    mode: 'LRPT',
+    desc: 'Russian polar meteorological satellite. Digital LRPT at ~1 km/px — significantly sharper than NOAA APT. Three color channels. Decode with SatDump.',
+    catches: [],
+  },
+
+  // ── SPACE STATION ────────────────────────────────────────────────────────
+  {
+    id: 'iss-voice',
+    name: 'ISS VOICE',
+    full: 'International Space Station — Voice',
+    cat: 'space',
+    freq: '145.800 MHz',
+    mode: 'FM',
+    desc: 'Crew downlink voice. Active during school contacts and EVA operations. Rare catch — requires monitoring pass predictions.',
+    catches: [
+      { date: "2026-05-26", location: "Columbia Gorge, WA", elevation: 20.7, signal: "carrier", notes: "Carrier received. FM capture effect confirmed at peak (~9:28 PM) — sustained static tone clearly distinct from background noise. No voice or SSTV active; last ARISS SSTV event Nov 2024. W approach. Antenna repositioned mid-pass." },
+    ],
+  },
+  {
+    id: 'iss-aprs',
+    name: 'ISS APRS',
+    full: 'ISS APRS Digipeater',
+    cat: 'space',
+    freq: '437.550 MHz',
+    mode: 'APRS',
+    desc: 'Station relays APRS packets from ground stations worldwide. Receive during overhead passes. Decode with Direwolf.',
+    catches: [],
+  },
+
+  // ── AVIATION ─────────────────────────────────────────────────────────────
+  {
+    id: 'adsb',
+    name: 'ADS-B',
+    full: 'ADS-B Aircraft Transponders',
+    cat: 'aviation',
+    freq: '1090 MHz',
+    mode: 'ADS-B',
+    desc: 'Commercial and GA aircraft broadcasting position, altitude, speed in real time. Gorge corridor busy with SEA-PDX traffic. Decode with dump1090.',
+    catches: [],
+  },
+  {
+    id: 'acars',
+    name: 'ACARS',
+    full: 'Aircraft Communications & Reporting',
+    cat: 'aviation',
+    freq: '129.125 MHz',
+    mode: 'Digital',
+    desc: 'Aircraft data link carrying maintenance codes, weather uplinks, gate assignments. Decodable with acarsdec. Surprisingly revealing.',
+    catches: [],
+  },
+  {
+    id: 'atc-voice',
+    name: 'ATC VOICE',
+    full: 'Air Traffic Control Voice',
+    cat: 'aviation',
+    freq: '118–137 MHz',
+    mode: 'AM',
+    desc: 'Controller/pilot comms. Seattle Center and Portland Approach both audible from Gorge ridge elevations. Listen for military callsigns.',
+    catches: [],
+  },
+  {
+    id: 'av-guard',
+    name: 'GUARD',
+    full: 'Aviation Emergency Guard',
+    cat: 'aviation',
+    freq: '121.500 MHz',
+    mode: 'AM',
+    desc: 'International aviation distress frequency. Always monitored by every aircraft. Any transmission here is a real event.',
+    catches: [],
+  },
+
+  // ── MARINE ───────────────────────────────────────────────────────────────
+  {
+    id: 'ch16',
+    name: 'CH. 16',
+    full: 'Marine VHF Channel 16 — Distress & Calling',
+    cat: 'marine',
+    freq: '156.800 MHz',
+    mode: 'FM',
+    desc: 'International maritime distress and calling frequency. Columbia River barge and tug traffic audible from the Gorge.',
+    catches: [],
+  },
+  {
+    id: 'ais',
+    name: 'AIS',
+    full: 'Automatic Identification System — Vessels',
+    cat: 'marine',
+    freq: '161.975 / 162.025 MHz',
+    mode: 'AIS',
+    desc: 'Ships transmitting name, position, course, speed. Columbia River grain barges, tankers, tugs. Decode with rtl_ais.',
+    catches: [],
+  },
+  {
+    id: 'marine-wx',
+    name: 'MARINE WX',
+    full: 'USCG Marine Weather Broadcasts',
+    cat: 'marine',
+    freq: '157.100 MHz',
+    mode: 'FM',
+    desc: 'Coast Guard weather broadcasts for Columbia River Bar and offshore zones. Bar conditions, sea state, wind.',
+    catches: [],
+  },
+
+  // ── AMATEUR & APRS ───────────────────────────────────────────────────────
+  {
+    id: 'aprs',
+    name: 'APRS',
+    full: 'Automatic Packet Reporting System',
+    cat: 'amateur',
+    freq: '144.390 MHz',
+    mode: 'APRS',
+    desc: 'North American APRS frequency. Vehicle tracking, wx stations, messages. Hood River and White Salmon area nodes active.',
+    catches: [],
+  },
+  {
+    id: 'cubesat',
+    name: 'CUBESAT',
+    full: 'CubeSat & Amateur Satellite Downlinks',
+    cat: 'amateur',
+    freq: '435–438 MHz',
+    mode: 'Digital / FM',
+    desc: 'Small research satellites from universities and amateur groups. Dozens of active birds in 70 cm band. Check db.satnogs.org.',
+    catches: [],
+  },
+
+  // ── UTILITY & INFRASTRUCTURE ─────────────────────────────────────────────
+  {
+    id: 'noaa-wx',
+    name: 'NOAA WX',
+    full: 'NOAA Weather Radio All Hazards',
+    cat: 'utility',
+    freq: '162.400–162.550 MHz',
+    mode: 'FM',
+    desc: 'Continuous NWS broadcast. KWO-35 Portland transmitter covers the Gorge. Tone alerts for watches and warnings.',
+    catches: [],
+  },
+  {
+    id: 'radiosonde',
+    name: 'RADIOSONDE',
+    full: 'Weather Balloon Radiosonde',
+    cat: 'utility',
+    freq: '400–406 MHz',
+    mode: 'Digital',
+    desc: 'Instrument packages launched twice daily from NWS Pendleton and Salem. Transmit GPS position as they ascend to ~30 km. Decode with RS41-Tracker.',
+    catches: [],
+  },
+  {
+    id: 'vor-ils',
+    name: 'VOR / ILS',
+    full: 'Aviation Navigation Beacons',
+    cat: 'utility',
+    freq: '108–118 MHz',
+    mode: 'VOR',
+    desc: 'Ground-based navigation transmitters for aircraft. BTG Battleground VOR, PDX ILS. The audio tones are machine-readable Morse.',
+    catches: [],
+  },
+  {
+    id: 'pocsag',
+    name: 'POCSAG',
+    full: 'POCSAG Pager Network',
+    cat: 'utility',
+    freq: '152–158 MHz',
+    mode: 'Digital',
+    desc: 'Hospital and emergency services pager traffic. Often transmitted in the clear. Decodable with PDW or multimon-ng.',
+    catches: [],
+  },
+  {
+    id: 'elt-epirb',
+    name: 'ELT / EPIRB',
+    full: '406 MHz Emergency Locator Transmitter',
+    cat: 'utility',
+    freq: '406.028 MHz',
+    mode: 'Digital',
+    desc: 'Emergency beacons from downed aircraft and distressed vessels. An activation is a live rescue event. Exceedingly rare.',
+    catches: [],
+  },
+
+  // ── EXOTIC / ASPIRATIONAL ────────────────────────────────────────────────
+  {
+    id: 'iridium',
+    name: 'IRIDIUM',
+    full: 'Iridium Satellite Constellation',
+    cat: 'exotic',
+    freq: '1616–1626 MHz',
+    mode: 'Burst',
+    desc: 'LEO satellite phone and IoT network. Short L-band data bursts from 66 active satellites. Requires upper-range capable setup.',
+    catches: [],
+  },
+  {
+    id: 'drone-rf',
+    name: 'DRONE RF',
+    full: 'Drone / UAS Control Signals',
+    cat: 'exotic',
+    freq: '433.920 / 915 MHz',
+    mode: 'Digital',
+    desc: 'Consumer and commercial drone control and telemetry links. Columbia Gorge sees active test operations. Correlate with visual sightings and FAA UAS NOTAMs.',
+    catches: [],
+  },
+  {
+    id: 'gps-anom',
+    name: 'GPS ANOM.',
+    full: 'GPS Jamming / Interference Anomaly',
+    cat: 'exotic',
+    freq: '1575.42 MHz',
+    mode: 'Anomaly',
+    desc: 'INL and military test jamming events published as NOTAMs. Idaho test ranges affect eastern Gorge late at night. Watch for L1 band disturbance.',
+    catches: [],
+  },
+  {
+    id: 'p25',
+    name: 'P25 VOICE',
+    full: 'P25 Digital Public Safety Voice',
+    cat: 'exotic',
+    freq: 'Various VHF/UHF',
+    mode: 'P25',
+    desc: 'Digital voice used by law enforcement, fire, and emergency services. Skamania County and adjacent agencies. Decode with DSD+ or OP25.',
+    catches: [],
+  },
+  {
+    id: 'hf-util',
+    name: 'HF UTILITY',
+    full: 'HF Shortwave Utility & DX',
+    cat: 'exotic',
+    freq: 'Via direct sampling',
+    mode: 'Various',
+    desc: 'RTL-SDR V4 direct sampling opens the HF bands. Numbers stations, military STANAG data links, maritime weather fax, ham DX — the old deep ocean of radio.',
+    catches: [],
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  SVG ICONS  (viewBox 0 0 160 160, center 80,80)
+// ─────────────────────────────────────────────────────────────────────────────
+function iconWeatherSat(s) {
+  return `<g stroke="${s}" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="60" y="64" width="40" height="28" stroke-width="2"/>
+    <rect x="12" y="68" width="46" height="20" stroke-width="1.5"/>
+    <line x1="26" y1="68" x2="26" y2="88" stroke-width="0.8" opacity=".7"/>
+    <line x1="40" y1="68" x2="40" y2="88" stroke-width="0.8" opacity=".7"/>
+    <rect x="102" y="68" width="46" height="20" stroke-width="1.5"/>
+    <line x1="116" y1="68" x2="116" y2="88" stroke-width="0.8" opacity=".7"/>
+    <line x1="130" y1="68" x2="130" y2="88" stroke-width="0.8" opacity=".7"/>
+    <line x1="80" y1="64" x2="80" y2="50" stroke-width="1.5"/>
+    <circle cx="80" cy="46" r="6" stroke-width="1.5"/>
+    <path d="M38 108 Q80 122 122 108" stroke-width="1" stroke-dasharray="4,4" opacity=".55"/>
+  </g>`;
+}
+
+function iconSpaceStation(s) {
+  return `<g stroke="${s}" fill="none" stroke-linecap="round">
+    <rect x="10" y="77" width="140" height="7" stroke-width="1.5"/>
+    <rect x="62" y="52" width="36" height="56" stroke-width="2"/>
+    <rect x="14" y="56" width="42" height="15" stroke-width="1.5"/>
+    <rect x="14" y="89" width="42" height="15" stroke-width="1.5"/>
+    <rect x="104" y="56" width="42" height="15" stroke-width="1.5"/>
+    <rect x="104" y="89" width="42" height="15" stroke-width="1.5"/>
+    <line x1="80" y1="52" x2="80" y2="42" stroke-width="1.5"/>
+    <circle cx="80" cy="38" r="5" stroke-width="1.5"/>
+  </g>`;
+}
+
+function iconAircraft(s) {
+  return `<g stroke="${s}" fill="none" stroke-linecap="round">
+    <circle cx="80" cy="80" r="44" stroke-width="1" stroke-dasharray="2,5" opacity=".35"/>
+    <circle cx="80" cy="80" r="28" stroke-width="1" stroke-dasharray="2,5" opacity=".25"/>
+    <line x1="80" y1="36" x2="80" y2="78" stroke-width="1" opacity=".5"/>
+    <path d="M80 80 L116 54" stroke-width="2"/>
+    <circle cx="116" cy="54" r="4" fill="${s}" stroke-width="0" opacity=".85"/>
+    <circle cx="80" cy="80" r="4" stroke-width="1.5"/>
+    <line x1="62" y1="80" x2="98" y2="80" stroke-width="1" opacity=".35"/>
+  </g>`;
+}
+
+function iconVessel(s) {
+  return `<g stroke="${s}" fill="none" stroke-linecap="round">
+    <path d="M26 90 L34 60 L126 60 L134 90 Z" stroke-width="2"/>
+    <rect x="52" y="44" width="42" height="18" stroke-width="1.5"/>
+    <line x1="72" y1="44" x2="72" y2="34" stroke-width="1.5"/>
+    <line x1="88" y1="44" x2="88" y2="38" stroke-width="1.5"/>
+    <path d="M18 98 Q36 91 54 98 Q72 105 90 98 Q108 91 126 98 Q144 105 152 98"
+          stroke-width="1.5" opacity=".65"/>
+    <path d="M18 108 Q36 101 54 108 Q72 115 90 108 Q108 101 126 108 Q144 115 152 108"
+          stroke-width="1" opacity=".35"/>
+  </g>`;
+}
+
+function iconTower(s) {
+  return `<g stroke="${s}" fill="none" stroke-linecap="round">
+    <line x1="80" y1="28" x2="48" y2="112" stroke-width="2"/>
+    <line x1="80" y1="28" x2="112" y2="112" stroke-width="2"/>
+    <line x1="57" y1="72" x2="103" y2="72" stroke-width="1.5"/>
+    <line x1="64" y1="92" x2="96" y2="92" stroke-width="1.5"/>
+    <line x1="48" y1="112" x2="112" y2="112" stroke-width="2"/>
+    <line x1="80" y1="112" x2="80" y2="128" stroke-width="1.5"/>
+    <path d="M56 46 Q80 29 104 46" stroke-width="1.5" stroke-dasharray="3,3" opacity=".7"/>
+    <path d="M42 33 Q80 8 118 33"  stroke-width="1"   stroke-dasharray="3,4" opacity=".45"/>
+  </g>`;
+}
+
+function iconGauge(s) {
+  return `<g stroke="${s}" fill="none" stroke-linecap="round">
+    <path d="M30 98 A52 52 0 1 1 130 98" stroke-width="2"/>
+    <path d="M38 112 A44 44 0 0 1 122 112" stroke-width="1" opacity=".4"/>
+    <line x1="80" y1="80" x2="50" y2="54" stroke-width="2.5"/>
+    <circle cx="80" cy="80" r="6" stroke-width="2"/>
+    <line x1="30" y1="98" x2="39" y2="98" stroke-width="2"/>
+    <line x1="130" y1="98" x2="121" y2="98" stroke-width="2"/>
+    <line x1="80" y1="46" x2="80" y2="55" stroke-width="2"/>
+    <line x1="46" y1="58" x2="52" y2="64" stroke-width="1.5"/>
+    <line x1="114" y1="58" x2="108" y2="64" stroke-width="1.5"/>
+  </g>`;
+}
+
+function iconSignalBurst(s) {
+  return `<g stroke="${s}" fill="none" stroke-linecap="round">
+    <path d="M52 52 Q52 30 80 30 Q108 30 108 52"
+          stroke-width="1.5" stroke-dasharray="3,4" opacity=".8"/>
+    <path d="M38 66 Q33 38 80 34 Q127 38 122 66"
+          stroke-width="1"   stroke-dasharray="2,4" opacity=".6"/>
+    <path d="M24 80 Q16 44 80 38 Q144 44 136 80"
+          stroke-width="0.8" stroke-dasharray="2,5" opacity=".4"/>
+    <circle cx="80" cy="80" r="9" stroke-width="2"/>
+    <line x1="80" y1="48" x2="80" y2="71" stroke-width="1.5"/>
+    <line x1="80" y1="89" x2="80" y2="112" stroke-width="1" opacity=".5"/>
+    <line x1="62" y1="92" x2="50" y2="104" stroke-width="1" opacity=".45"/>
+    <line x1="98" y1="92" x2="110" y2="104" stroke-width="1" opacity=".45"/>
+    <line x1="50" y1="72" x2="40" y2="66" stroke-width="1" opacity=".35"/>
+    <line x1="110" y1="72" x2="120" y2="66" stroke-width="1" opacity=".35"/>
+  </g>`;
+}
+
+const CAT_ICON = {
+  'weather-sat': iconWeatherSat,
+  'space':       iconSpaceStation,
+  'aviation':    iconAircraft,
+  'marine':      iconVessel,
+  'amateur':     iconTower,
+  'utility':     iconGauge,
+  'exotic':      iconSignalBurst,
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  RENDER
+// ─────────────────────────────────────────────────────────────────────────────
+function makeTicks(stroke) {
+  return Array.from({length: 12}, (_, i) => {
+    const a = (i * 30 - 90) * Math.PI / 180;
+    const big = i % 3 === 0;
+    const r1 = 72, r2 = big ? 62 : 66;
+    const x1 = (80 + r1 * Math.cos(a)).toFixed(2);
+    const y1 = (80 + r1 * Math.sin(a)).toFixed(2);
+    const x2 = (80 + r2 * Math.cos(a)).toFixed(2);
+    const y2 = (80 + r2 * Math.sin(a)).toFixed(2);
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
+      stroke="${stroke}" stroke-width="${big ? 2 : 0.8}" opacity="${big ? 0.9 : 0.4}"/>`;
+  }).join('');
+}
+
+function renderBadge(bird, catColor) {
+  const caught = bird.catches.length > 0;
+  const s = caught ? catColor : '#3a4e34';
+  const tf = caught ? catColor : '#3a4e34';
+  const iconFn = CAT_ICON[bird.cat];
+  return `
+<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" class="badge-svg">
+  <circle cx="80" cy="80" r="76" fill="#0f1a0d"/>
+  <circle cx="80" cy="80" r="74" fill="none" stroke="${s}" stroke-width="1.5" opacity=".7"/>
+  <circle cx="80" cy="80" r="66" fill="none" stroke="${s}" stroke-width="0.5"
+    stroke-dasharray="3,6" opacity=".35"/>
+  ${makeTicks(s)}
+  ${iconFn(s)}
+  <text x="80" y="137" text-anchor="middle"
+    font-family="'Share Tech Mono',monospace" font-size="9"
+    fill="${tf}" letter-spacing="0.5" opacity=".85">${bird.freq}</text>
+  <text x="80" y="149" text-anchor="middle"
+    font-family="'Share Tech Mono',monospace" font-size="7.5"
+    fill="${tf}" letter-spacing="1" opacity=".55">${bird.mode}</text>
+</svg>`.trim();
+}
+
+function renderCard(bird) {
+  const cat   = CATEGORIES.find(c => c.id === bird.cat);
+  const caught = bird.catches.length > 0;
+  const last  = caught ? bird.catches[bird.catches.length - 1] : null;
+  return `
+<div class="bird-card ${caught ? 'caught' : 'uncaught'}" title="${bird.full} — ${bird.desc}">
+  <div class="badge-wrap">
+    ${renderBadge(bird, cat.color)}
+    <div class="ghost-stamp"><span>UNDETECTED</span></div>
+  </div>
+  <div class="bird-name">${bird.name}</div>
+  <div class="bird-full">${bird.full}</div>
+  <div class="bird-status">${caught ? `✦ ${last.date}${last.location ? ` · ${last.location}` : ''}` : '— — —'}</div>
+</div>`.trim();
+}
+
+function renderGallery() {
+  const total  = BIRDS.length;
+  const caught = BIRDS.filter(b => b.catches.length > 0).length;
+  const pct    = Math.round(caught / total * 100);
+
+  document.getElementById('statsBar').innerHTML = `
+    <span>CONFIRMED&nbsp;<span class="stat-val">${caught}</span></span>
+    <span>CATALOG&nbsp;<span class="stat-val">${total}</span></span>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <span>COMPLETION&nbsp;<span class="stat-val">${pct}%</span></span>
+    <span style="margin-left:auto">UPDATED&nbsp;<span class="stat-val">${
+      new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'2-digit'}).toUpperCase()
+    }</span></span>`;
+
+  let html = '';
+  for (const cat of CATEGORIES) {
+    const birds = BIRDS.filter(b => b.cat === cat.id);
+    if (!birds.length) continue;
+    html += `
+<div class="cat-header">
+  <div class="cat-label" style="color:${cat.color}">${cat.label}</div>
+  <div class="cat-rule" style="background:linear-gradient(90deg,${cat.color}50,transparent)"></div>
+</div>`;
+    for (const bird of birds) html += renderCard(bird);
+  }
+  document.getElementById('gallery').innerHTML = html;
+}
+
+renderGallery();
+</script>
+</body>
+</html>

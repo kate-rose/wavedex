@@ -1,0 +1,23 @@
+[
+  { "min_mhz": 87.5,   "max_mhz": 108.0,  "name": "FM Broadcast",             "description": "Commercial FM radio stations",                            "signal_types": ["FM"],         "interesting": false },
+  { "min_mhz": 108.0,  "max_mhz": 118.0,  "name": "Aviation VOR/ILS",         "description": "VHF Omnidirectional Range and Instrument Landing Systems", "signal_types": ["VOR","ILS"],  "interesting": true  },
+  { "min_mhz": 118.0,  "max_mhz": 137.0,  "name": "Aviation Voice (AM)",      "description": "Air traffic control and pilot communications",              "signal_types": ["AM"],         "interesting": true  },
+  { "min_mhz": 121.5,  "max_mhz": 121.5,  "name": "Aviation Emergency",       "description": "International aviation distress frequency — Guard channel", "signal_types": ["AM"],         "interesting": true  },
+  { "min_mhz": 136.9,  "max_mhz": 137.025,"name": "NOAA-18 downlink",         "description": "NOAA-18 weather satellite APT image downlink",             "signal_types": ["APT"],        "interesting": true  },
+  { "min_mhz": 137.1,  "max_mhz": 137.175,"name": "NOAA-19 downlink",         "description": "NOAA-19 weather satellite APT image downlink",             "signal_types": ["APT"],        "interesting": true  },
+  { "min_mhz": 137.5,  "max_mhz": 137.625,"name": "NOAA-15 downlink",         "description": "NOAA-15 weather satellite APT image downlink",             "signal_types": ["APT"],        "interesting": true  },
+  { "min_mhz": 137.62, "max_mhz": 137.925,"name": "METEOR-M weather sat",     "description": "Russian Meteor-M LRPT weather satellite downlink",         "signal_types": ["LRPT"],       "interesting": true  },
+  { "min_mhz": 144.0,  "max_mhz": 148.0,  "name": "2m Amateur / APRS",        "description": "Ham radio voice; 144.390 is North American APRS",          "signal_types": ["FM","APRS"],  "interesting": true  },
+  { "min_mhz": 145.8,  "max_mhz": 145.8,  "name": "ISS Voice Downlink",       "description": "International Space Station voice downlink (when active)",  "signal_types": ["FM"],         "interesting": true  },
+  { "min_mhz": 156.0,  "max_mhz": 162.025,"name": "Marine VHF / AIS",        "description": "Maritime communications; 161.975 & 162.025 are AIS",       "signal_types": ["FM","AIS"],   "interesting": true  },
+  { "min_mhz": 156.8,  "max_mhz": 156.8,  "name": "Marine Channel 16 (Distress)","description": "International maritime distress and calling frequency", "signal_types": ["FM"],         "interesting": true  },
+  { "min_mhz": 162.4,  "max_mhz": 162.55, "name": "NOAA Weather Radio",       "description": "US National Weather Service continuous broadcasts",         "signal_types": ["FM"],         "interesting": true  },
+  { "min_mhz": 406.0,  "max_mhz": 406.1,  "name": "ELT / EPIRB Distress",    "description": "406 MHz emergency locator transmitter activations",         "signal_types": ["digital"],    "interesting": true  },
+  { "min_mhz": 433.05, "max_mhz": 434.79, "name": "ISM 433 MHz",             "description": "European ISM band: weather stations, car fobs, sensors",    "signal_types": ["various"],    "interesting": false },
+  { "min_mhz": 435.0,  "max_mhz": 438.0,  "name": "70cm Amateur / CubeSats", "description": "Ham radio; many CubeSat and amateur satellite downlinks",   "signal_types": ["FM","digital"],"interesting": true },
+  { "min_mhz": 437.55, "max_mhz": 437.55, "name": "ISS APRS Digipeater",     "description": "International Space Station APRS position/packet relay",    "signal_types": ["APRS"],       "interesting": true  },
+  { "min_mhz": 462.0,  "max_mhz": 467.0,  "name": "FRS/GMRS (US walkie)",    "description": "Family Radio Service and General Mobile Radio Service",     "signal_types": ["FM","CTCSS"], "interesting": false },
+  { "min_mhz": 915.0,  "max_mhz": 928.0,  "name": "ISM 915 MHz / LoRa",      "description": "US ISM band: LoRa gateways, smart meters, Z-Wave",         "signal_types": ["various"],    "interesting": false },
+  { "min_mhz": 1090.0, "max_mhz": 1090.0, "name": "ADS-B (aircraft)",        "description": "1090 MHz ADS-B aircraft transponders (position, speed)",    "signal_types": ["ADS-B"],      "interesting": true  },
+  { "min_mhz": 1544.0, "max_mhz": 1545.0, "name": "Inmarsat / Iridium",      "description": "Satellite phone and data signals (L-band)",                 "signal_types": ["digital"],    "interesting": true  }
+]
