@@ -624,19 +624,22 @@
             </g>
           </g>
           <g id="antennaRoot" transform="translate(250,278)">
+            <!-- mast stays fixed: feedline always hangs down regardless of dipole angle -->
+            <line id="mast" x1="0" y1="0" x2="0" y2="72" stroke="#445840" stroke-width="1.5" stroke-dasharray="5 5"/>
+            <!-- only the legs + feed point rotate -->
             <g id="dipoleRotate" transform="rotate(0)">
-              <line id="mast" x1="0" y1="0" x2="0" y2="72" stroke="#445840" stroke-width="1.5" stroke-dasharray="5 5"/>
               <g id="dipoleBars">
                 <rect id="legLeft"  x="-120" y="-8" width="120" height="16" rx="0" fill="#c88c1a"/>
                 <rect id="legRight" x="0"    y="-8" width="120" height="16" rx="0" fill="#4a7a9a"/>
                 <circle cx="0" cy="0" r="10" fill="#131a10" stroke="#445840" stroke-width="1.5"/>
               </g>
-              <g id="labels" font-size="11" font-weight="600" text-anchor="middle" font-family="'Share Tech Mono','Courier New',monospace">
-                <rect id="tagLBg" x="-95" y="-38" width="56" height="22" rx="0" fill="rgba(200,140,26,0.15)" stroke="#6a4a0c" stroke-width="1"/>
-                <text id="tagL" x="-67" y="-23" fill="#c88c1a">52.0 CM</text>
-                <rect id="tagRBg" x="39"  y="-38" width="56" height="22" rx="0" fill="rgba(42,72,88,0.4)"    stroke="#2a4858" stroke-width="1"/>
-                <text id="tagR" x="67"  y="-23" fill="#4a7a9a">52.0 CM</text>
-              </g>
+            </g>
+            <!-- labels positioned by JS in antennaRoot space so text stays horizontal -->
+            <g id="labels" font-size="11" font-weight="600" text-anchor="middle" font-family="'Share Tech Mono','Courier New',monospace">
+              <rect id="tagLBg" x="-95" y="-38" width="56" height="22" rx="0" fill="rgba(200,140,26,0.15)" stroke="#6a4a0c" stroke-width="1"/>
+              <text id="tagL" x="-67" y="-23" fill="#c88c1a">52.0 CM</text>
+              <rect id="tagRBg" x="39"  y="-38" width="56" height="22" rx="0" fill="rgba(42,72,88,0.4)"    stroke="#2a4858" stroke-width="1"/>
+              <text id="tagR" x="67"  y="-23" fill="#4a7a9a">52.0 CM</text>
             </g>
           </g>
         </svg>
@@ -1489,11 +1492,27 @@ function renderGallery() {
     tagR.textContent = legLabel;
     var tw = tagL.getComputedTextLength ? tagL.getComputedTextLength() + 18 : 56;
     var tagW = Math.max(48, tw);
-    tagL.setAttribute('x', -w / 2);
-    tagR.setAttribute('x',  w / 2);
-    tagLBg.setAttribute('x', -w / 2 - tagW / 2);
+
+    // Compute label centers in antennaRoot-local space so text stays horizontal
+    // at any dipole angle. "Up" = perpendicular to dipole, away from the mast.
+    var rad = cfg.rotationDeg * Math.PI / 180;
+    var cosA = Math.cos(rad), sinA = Math.sin(rad);
+    var upX = sinA, upY = -cosA;        // perpendicular "above" the dipole axis
+    var LABEL_OFFSET = 36;
+    var lCX = (-w / 2) * cosA + upX * LABEL_OFFSET;
+    var lCY = (-w / 2) * sinA + upY * LABEL_OFFSET;
+    var rCX = ( w / 2) * cosA + upX * LABEL_OFFSET;
+    var rCY = ( w / 2) * sinA + upY * LABEL_OFFSET;
+
+    tagL.setAttribute('x', lCX);
+    tagL.setAttribute('y', lCY + 4);
+    tagLBg.setAttribute('x', lCX - tagW / 2);
+    tagLBg.setAttribute('y', lCY - 11);
     tagLBg.setAttribute('width', tagW);
-    tagRBg.setAttribute('x',  w / 2 - tagW / 2);
+    tagR.setAttribute('x', rCX);
+    tagR.setAttribute('y', rCY + 4);
+    tagRBg.setAttribute('x', rCX - tagW / 2);
+    tagRBg.setAttribute('y', rCY - 11);
     tagRBg.setAttribute('width', tagW);
 
     document.getElementById('dipoleRotate').setAttribute('transform', 'rotate(' + cfg.rotationDeg + ')');
