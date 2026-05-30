@@ -140,6 +140,37 @@
       transition: width 0.6s ease;
     }
 
+    /* ── TABS ── */
+    .tab-nav {
+      display: flex;
+      padding: 0 3.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      gap: 0;
+    }
+    .tab-btn {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 0.8rem 1.8rem 0.65rem;
+      cursor: pointer;
+      transition: color 0.18s, border-color 0.18s;
+      margin-bottom: -1px;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+    .tab-btn .slash { color: var(--amber); opacity: 0.7; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
     /* ── GALLERY GRID ── */
     .gallery {
       display: grid;
@@ -190,19 +221,16 @@
       transition: filter 0.3s;
     }
 
-    /* Caught */
     .bird-card.caught .badge-svg {
       filter:
         drop-shadow(0 0 7px rgba(200,140,26,0.55))
         drop-shadow(0 0 22px rgba(200,140,26,0.18));
     }
 
-    /* Uncaught */
     .bird-card.uncaught .badge-svg {
       filter: saturate(0.12) brightness(0.42);
     }
 
-    /* Ghost stamp on uncaught */
     .badge-wrap .ghost-stamp {
       position: absolute;
       inset: 0;
@@ -261,6 +289,184 @@
     .bird-card.caught   .bird-status { color: var(--amber); border-color: var(--amber-dim); }
     .bird-card.uncaught .bird-status { color: var(--text-dim); border-color: var(--border); }
 
+    /* ── PLANNER LAYOUT ── */
+    .planner-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 3.5rem 5rem;
+    }
+
+    .planner-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 2.5rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      padding-bottom: 1.25rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .planner-meta b { color: var(--amber); font-weight: normal; }
+
+    .planner-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.5rem 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .planner-section-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 400;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .planner-svg-wrap {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      aspect-ratio: 5 / 4;
+      display: block;
+    }
+    .planner-svg-wrap svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .planner-rings { transition: opacity 0.35s ease; }
+    .planner-rings.dimmed { opacity: 0.08; }
+
+    .planner-len-summary {
+      text-align: center;
+      margin-top: 0.75rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+    }
+    .planner-len-summary strong { color: var(--amber); font-weight: normal; }
+
+    .planner-sweep {
+      text-align: center;
+      margin: 0.4rem 0 0;
+      font-size: 0.62rem;
+      letter-spacing: 0.04em;
+      color: var(--text-dim);
+      line-height: 1.55;
+      padding: 0 1rem;
+    }
+    .planner-sweep strong { color: var(--text); font-weight: normal; }
+
+    .planner-orient {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .orient-eyebrow {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 400;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.4rem;
+    }
+    .orient-axis {
+      color: var(--amber);
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.4rem;
+    }
+    .orient-tip {
+      font-size: 0.68rem;
+      color: var(--text);
+      line-height: 1.65;
+      letter-spacing: 0.02em;
+    }
+
+    .planner-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem 2.5rem;
+      align-items: flex-end;
+    }
+    .pfield {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      min-width: 0;
+    }
+    .pfield label {
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .pfield select,
+    .pfield input[type="number"] {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 0;
+      padding: 0.5rem 0.75rem;
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
+      font-size: 0.82rem;
+      min-width: 13rem;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .pfield input[type="number"] { min-width: 7.5rem; max-width: 9rem; }
+    .pfield select:focus,
+    .pfield input[type="number"]:focus {
+      outline: 1px solid var(--amber);
+      outline-offset: 2px;
+    }
+    .pfield select option,
+    .pfield select optgroup { background: var(--surface); color: var(--text); }
+
+    .ptoggle { flex-direction: row; align-items: center; gap: 0.65rem; }
+    .ptoggle label { cursor: pointer; }
+
+    .pswitch {
+      position: relative;
+      width: 38px; height: 22px;
+      flex-shrink: 0;
+    }
+    .pswitch input {
+      position: absolute; opacity: 0;
+      width: 100%; height: 100%;
+      margin: 0; cursor: pointer; z-index: 1;
+    }
+    .pswitch-track {
+      position: absolute; inset: 0;
+      background: var(--border);
+      border-radius: 0;
+      transition: background 0.2s;
+    }
+    .pswitch-thumb {
+      position: absolute; top: 3px; left: 3px;
+      width: 16px; height: 16px;
+      background: var(--text-dim);
+      border-radius: 0;
+      transition: transform 0.2s;
+    }
+    .pswitch input:checked + .pswitch-track { background: var(--amber-dim); }
+    .pswitch input:checked + .pswitch-track .pswitch-thumb {
+      transform: translateX(16px);
+      background: var(--amber);
+    }
+    .pswitch input:focus-visible + .pswitch-track {
+      outline: 1px solid var(--amber);
+      outline-offset: 2px;
+    }
+
     /* ── FOOTER ── */
     .site-footer {
       text-align: center;
@@ -269,6 +475,13 @@
       font-size: 0.6rem;
       letter-spacing: 0.15em;
       color: var(--text-dim);
+    }
+
+    @media (max-width: 700px) {
+      .site-header { padding: 2rem 1.5rem 1.5rem; }
+      .stats-bar, .tab-nav { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .gallery { padding: 2rem 1.5rem 4rem; }
+      .planner-wrap { padding: 1.5rem 1.5rem 4rem; }
     }
   </style>
 </head>
@@ -291,7 +504,131 @@
 
 <div class="stats-bar" id="statsBar"></div>
 
-<div class="gallery" id="gallery"></div>
+<nav class="tab-nav" role="tablist">
+  <button class="tab-btn active" id="tabBtnJournal" role="tab" aria-selected="true" aria-controls="tab-journal">ПОЛЕВОЙ ЖУРНАЛ</button>
+  <button class="tab-btn" id="tabBtnPlanner" role="tab" aria-selected="false" aria-controls="tab-planner">DIPOLE <span class="slash">//</span> АНТЕННА</button>
+</nav>
+
+<!-- ── TAB 1: FIELD JOURNAL ── -->
+<div class="tab-panel active" id="tab-journal" role="tabpanel" aria-labelledby="tabBtnJournal">
+  <div class="gallery" id="gallery"></div>
+</div>
+
+<!-- ── TAB 2: DIPOLE PLANNER ── -->
+<div class="tab-panel" id="tab-planner" role="tabpanel" aria-labelledby="tabBtnPlanner">
+  <div class="planner-wrap">
+
+    <div class="planner-meta">
+      <span>TARGET&nbsp;<b id="kpiTarget">Satellite</b></span>
+      <span>MODE&nbsp;<b id="kpiMode">WFM</b></span>
+      <span>TOTAL&nbsp;<b id="kpiTotal">104.0 cm</b></span>
+      <span>PER LEG&nbsp;<b id="kpiLeg">52.0 cm</b></span>
+      <span class="cursor"></span>
+    </div>
+
+    <div class="planner-panel">
+      <div class="planner-section-label" id="visualHeading">SATELLITE SETUP</div>
+      <div class="planner-svg-wrap">
+        <svg viewBox="0 0 500 400" role="img" aria-label="Dipole antenna diagram">
+          <g class="planner-rings" id="ringGroup" aria-hidden="true">
+            <circle cx="250" cy="168" r="140" fill="none" stroke="#c88c1a" stroke-opacity="0.05" stroke-width="1"/>
+            <circle cx="250" cy="168" r="112" fill="none" stroke="#c88c1a" stroke-opacity="0.07" stroke-width="1"/>
+            <circle cx="250" cy="168" r="84"  fill="none" stroke="#c88c1a" stroke-opacity="0.09" stroke-width="1"/>
+            <circle cx="250" cy="168" r="56"  fill="none" stroke="#c88c1a" stroke-opacity="0.11" stroke-width="1"/>
+            <circle cx="250" cy="168" r="28"  fill="none" stroke="#c88c1a" stroke-opacity="0.14" stroke-width="1"/>
+          </g>
+          <g id="iconGroup" transform="translate(250,168)">
+            <g id="iconSatellite" fill="none" stroke="#c88c1a" stroke-width="2" stroke-linecap="round">
+              <path d="M-8,-12 L8,-12 M0,-12 L0,-6 M-14,0 L-6,0 M6,0 L14,0 M-10,8 L10,8 M-6,4 L6,4"/>
+              <rect x="-6" y="-6" width="12" height="14" rx="0" fill="#c88c1a" fill-opacity="0.15" stroke="#c88c1a"/>
+            </g>
+            <g id="iconRadio" fill="none" stroke="#c88c1a" stroke-width="2" display="none">
+              <path d="M-16,6 Q-16,-10 0,-10 Q16,-10 16,6"/>
+              <line x1="0" y1="-10" x2="0" y2="4"/>
+              <circle cx="0" cy="8" r="3" fill="#c88c1a" fill-opacity="0.3"/>
+            </g>
+            <g id="iconPlane" fill="none" stroke="#c88c1a" stroke-width="2" display="none" stroke-linejoin="round">
+              <path d="M-18,2 L18,2 M0,2 L0,-8 M-8,-2 L8,-2"/>
+              <path d="M-6,2 L0,10 L6,2"/>
+            </g>
+            <g id="iconTower" fill="none" stroke="#c88c1a" stroke-width="2" display="none">
+              <line x1="0" y1="14" x2="0" y2="-12"/>
+              <line x1="-12" y1="-2" x2="12" y2="-2"/>
+              <line x1="-8" y1="2" x2="8" y2="2"/>
+              <line x1="-4" y1="6" x2="4" y2="6"/>
+            </g>
+            <g id="iconHam" fill="none" stroke="#c88c1a" stroke-width="2" display="none">
+              <path d="M-14,0 L14,0 M0,-12 L0,12 M-10,-8 L10,8 M10,-8 L-10,8"/>
+            </g>
+            <g id="iconShip" fill="none" stroke="#c88c1a" stroke-width="2" stroke-linejoin="round" display="none">
+              <path d="M-14,4 L-10,-4 L10,-4 L14,4 Z" fill="#c88c1a" fill-opacity="0.15"/>
+              <path d="M-16,6 Q0,10 16,6"/>
+              <line x1="-6" y1="-4" x2="-6" y2="-10"/>
+              <line x1="6" y1="-4" x2="6" y2="-10"/>
+            </g>
+            <g id="iconTrain" fill="none" stroke="#c88c1a" stroke-width="2" stroke-linejoin="round" display="none">
+              <rect x="-14" y="-8" width="28" height="14" rx="0" fill="#c88c1a" fill-opacity="0.12"/>
+              <line x1="-10" y1="-2" x2="-4" y2="-2"/>
+              <line x1="4" y1="-2" x2="10" y2="-2"/>
+              <circle cx="-8" cy="8" r="3"/>
+              <circle cx="8" cy="8" r="3"/>
+              <line x1="-14" y1="6" x2="14" y2="6"/>
+            </g>
+          </g>
+          <g id="antennaRoot" transform="translate(250,278)">
+            <g id="dipoleRotate" transform="rotate(0)">
+              <line id="mast" x1="0" y1="0" x2="0" y2="72" stroke="#445840" stroke-width="1.5" stroke-dasharray="5 5"/>
+              <g id="dipoleBars">
+                <rect id="legLeft"  x="-120" y="-8" width="120" height="16" rx="0" fill="#c88c1a"/>
+                <rect id="legRight" x="0"    y="-8" width="120" height="16" rx="0" fill="#4a7a9a"/>
+                <circle cx="0" cy="0" r="10" fill="#131a10" stroke="#445840" stroke-width="1.5"/>
+              </g>
+              <g id="labels" font-size="11" font-weight="600" text-anchor="middle" font-family="'Share Tech Mono','Courier New',monospace">
+                <rect id="tagLBg" x="-95" y="-38" width="56" height="22" rx="0" fill="rgba(200,140,26,0.15)" stroke="#6a4a0c" stroke-width="1"/>
+                <text id="tagL" x="-67" y="-23" fill="#c88c1a">52.0 CM</text>
+                <rect id="tagRBg" x="39"  y="-38" width="56" height="22" rx="0" fill="rgba(42,72,88,0.4)"    stroke="#2a4858" stroke-width="1"/>
+                <text id="tagR" x="67"  y="-23" fill="#4a7a9a">52.0 CM</text>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <p class="planner-len-summary">
+        TOTAL PHYSICAL LENGTH: <strong id="totalLenText">104.0 cm</strong>
+        &nbsp;·&nbsp;
+        <strong id="freqDisplay">137.5</strong> MHz · ½-WAVE DIPOLE (143/f)
+      </p>
+      <p class="planner-sweep" id="listenBandLine">
+        <strong>SWEEP:</strong> <span id="listenBandText">≈137–138 MHz for APT; scan ~130–140 MHz for other LEO VHF.</span>
+      </p>
+    </div>
+
+    <div class="planner-orient">
+      <div class="orient-eyebrow">Orientation Guidance</div>
+      <div class="orient-axis" id="orientAxis">Horizontal — broadside toward pass</div>
+      <p class="orient-tip" id="orientTip">NOAA APT and many LEO birds use circular polarization; a horizontal linear dipole still works with some fade. Aim broadside along the predicted pass track.</p>
+    </div>
+
+    <div class="planner-controls">
+      <div class="pfield">
+        <label for="category">Target Category</label>
+        <select id="category" name="category"></select>
+      </div>
+      <div class="pfield">
+        <label for="frequency">Frequency (MHz)</label>
+        <input id="frequency" name="frequency" type="number" min="1" max="3000" step="0.001" value="137.5" inputmode="decimal"/>
+      </div>
+      <div class="pfield ptoggle">
+        <div class="pswitch">
+          <input type="checkbox" id="visualize" checked aria-label="Visualize signal rings"/>
+          <div class="pswitch-track" aria-hidden="true"><div class="pswitch-thumb"></div></div>
+        </div>
+        <label for="visualize">Visualize Signal</label>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <footer class="site-footer">
   WAVEDEX ПОЛЕВОЙ ЖУРНАЛ · COLUMBIA GORGE STATION · ALL SIGNALS RECEIVED PASSIVELY · NO TRANSMISSIONS
@@ -299,7 +636,7 @@
 
 <script>
 // ─────────────────────────────────────────────────────────────────────────────
-//  CATEGORIES
+//  GALLERY DATA
 // ─────────────────────────────────────────────────────────────────────────────
 const CATEGORIES = [
   { id: 'weather-sat',  label: 'Weather Satellites',      color: '#b87c18' },
@@ -312,12 +649,6 @@ const CATEGORIES = [
   { id: 'exotic',       label: 'Exotic / Aspirational',   color: '#8a2a14' },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  BIRD CATALOG
-//  To log a catch, add an entry to the bird's `catches` array:
-//  { date: "2026-05-28", location: "Columbia Gorge, WA", elevation: 31.9, notes: "Clean LRPT decode", signal: "strong" }
-//  `location` is optional but recommended — especially useful for field trips away from home base.
-// ─────────────────────────────────────────────────────────────────────────────
 const BIRDS = [
 
   // ── WEATHER SATELLITES ──────────────────────────────────────────────────
@@ -769,7 +1100,7 @@ const CAT_ICON = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  RENDER
+//  GALLERY RENDER
 // ─────────────────────────────────────────────────────────────────────────────
 function makeTicks(stroke) {
   return Array.from({length: 12}, (_, i) => {
@@ -851,6 +1182,341 @@ function renderGallery() {
   document.getElementById('gallery').innerHTML = html;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  DIPOLE PLANNER
+// ─────────────────────────────────────────────────────────────────────────────
+(function () {
+  var F_MIN = 1, F_MAX = 3000;
+  var HALF_WAVE_NUM = 143;
+  var MAX_LEG_CM = 120, SVG_HALF_PX = 118;
+
+  var TARGETS = {
+    satellite: {
+      label: "Satellite", defaultFreq: 137.5, mode: "WFM",
+      heading: "SATELLITE SETUP",
+      status: "Prime Listening Window: Satellite Pass",
+      rotationDeg: 0,
+      orientationTitle: "Horizontal — broadside toward pass",
+      tip: "Many weather sat downlinks (e.g. APT) are circularly polarized; a linear dipole still works with modest fade. Point the antenna broadside along the predicted ground track and adjust for best SNR.",
+      listenBand: "≈137–138 MHz for NOAA APT; scan ~130–140 MHz for other LEO VHF downlinks.",
+      icon: "satellite"
+    },
+    broadcast: {
+      label: "Broadcast FM", defaultFreq: 98.5, mode: "WFM",
+      heading: "FM BROADCAST",
+      status: "Band scan: commercial FM (88–108 MHz)",
+      rotationDeg: 90,
+      orientationTitle: "Vertical — match vertical TX polarization",
+      tip: "Most FM broadcast towers radiate vertical polarization. Orient your dipole vertically (one leg up, one down) for a stronger match in the horizontal plane.",
+      listenBand: "88–108 MHz (full commercial FM band); each station ~200 kHz-ish in WFM.",
+      icon: "tower"
+    },
+    airband: {
+      label: "Airband", defaultFreq: 118.7, mode: "AM",
+      heading: "AIRBAND VOICE",
+      status: "Aviation VHF: line-of-sight to aircraft",
+      rotationDeg: 90,
+      orientationTitle: "Vertical — common for aeronautical mobile",
+      tip: "Ground and air stations on VHF airband are typically vertically polarized. Vertical dipole improves coupling vs horizontal; keep the mast clear of metal obstacles.",
+      listenBand: "118–137 MHz (Intl aeronautical VHF); voice channels typically 8.33 or 25 kHz spaced.",
+      icon: "plane"
+    },
+    ads_b: {
+      label: "ADS-B / Mode S", defaultFreq: 1090, mode: "Raw IQ",
+      heading: "1090 ES",
+      status: "1090 MHz: aircraft transponders",
+      rotationDeg: 90,
+      orientationTitle: "Vertical — match transponder polarization",
+      tip: "ADS-B uses vertically polarized signals at 1090 MHz. A vertical half-wave is short; extend legs evenly and keep feed balanced for the strongest plane spots.",
+      listenBand: "Park ~1–3 MHz IQ on 1090 MHz for Mode S / ADS-B; extended Mode S needs more span.",
+      icon: "plane"
+    },
+    ham_vhf: {
+      label: "Amateur VHF", defaultFreq: 146.52, mode: "FM",
+      heading: "2 M FM SIMPLEX",
+      status: "Amateur 2 m: repeaters & simplex",
+      rotationDeg: 45,
+      orientationTitle: "Slant ~45° — compromise for mixed paths",
+      tip: "Local FM is often vertical on repeaters but stations may use anything portable. A 45° slant can be a good compromise when you are unsure of the other station's antenna.",
+      listenBand: "144–148 MHz (US 2 m allocation; ITU region & country plans differ). FM simplex/repeaters ~12–25 kHz.",
+      icon: "ham"
+    },
+    ham_hf: {
+      label: "HF / SWL", defaultFreq: 14.2, mode: "USB",
+      heading: "HF LISTENING",
+      status: "Shortwave & HF: long-distance skywave",
+      rotationDeg: 0,
+      orientationTitle: "Horizontal — low NVIS, broadside DX",
+      tip: "For DX skywave, a horizontal dipole is standard; broadside points at the favored direction. For NVIS-style regional work, keep it lower and horizontal.",
+      listenBand: "Per-band slices (e.g. 20 m ~14.0–14.35 MHz ITU); each SSB QSO ~2.7–3 kHz wide—zoom waterfall accordingly.",
+      icon: "radio"
+    },
+    military_air: {
+      label: "Military air (UHF)", defaultFreq: 243.0, mode: "AM",
+      heading: "MIL UHF / GUARD",
+      status: "NATO 225–400 MHz band: tactical & aeronautical",
+      rotationDeg: 90,
+      orientationTitle: "Vertical — match airborne & ground UHF practice",
+      tip: "Much military aeronautical traffic sits in 225–400 MHz with AM or FM voice; 243.0 MHz is the international UHF guard (also overlaps civil SAR). Receive only where your laws allow; expect encryption or hopping on busy nets.",
+      listenBand: "225–400 MHz (NATO/US tactical aero UHF); channel steps vary—start with a few MHz sweep then narrow.",
+      icon: "plane"
+    },
+    acars: {
+      label: "ACARS (VHF)", defaultFreq: 131.55, mode: "AM",
+      heading: "ACARS BURST HUNT",
+      status: "VHF data bursts from aircraft (~129–137 MHz)",
+      rotationDeg: 90,
+      orientationTitle: "Vertical — same polarization family as airband",
+      tip: "ACARS often appears as short bursts on assigned company channels; 131.55 MHz is a common starting point in many regions. Use a tall, clear vertical dipole toward the airport corridor.",
+      listenBand: "129–137 MHz (aircraft VHF data assignments); each burst narrow in RF—use modest IQ span, hunt by waterfall.",
+      icon: "plane"
+    },
+    gnss_l1: {
+      label: "GNSS / L1 band", defaultFreq: 1575.42, mode: "Raw IQ",
+      heading: "L1 MONITORING",
+      status: "GPS L1 center (Galileo E1 / BeiDou B1 nearby)",
+      rotationDeg: 0,
+      orientationTitle: "Horizontal — compare against a known RHCP patch",
+      tip: "Satellite nav downlinks are right-hand circular on L1; a linear dipole is a blunt instrument but handy for spotting wideband noise, jamming, or spurious energy. Only transmit or inject tests on bands and powers you are legally authorized to use.",
+      listenBand: "~1559–1610 MHz (L1/E1/B1 cluster); park ~2–10 MHz IQ on one constellation, or sweep the block for interference.",
+      icon: "satellite"
+    },
+    marine_vhf: {
+      label: "Marine VHF voice", defaultFreq: 156.8, mode: "FM",
+      heading: "MARINE CH 16",
+      status: "156–174 MHz: ship-to-ship & coastal",
+      rotationDeg: 90,
+      orientationTitle: "Vertical — marine is almost always vertical FM",
+      tip: "Channel 16 (156.8 MHz) is the international distress and calling frequency. Ship and shore stations are vertically polarized; get the antenna above the waterline and away from rigging for fewer reflections.",
+      listenBand: "156–174 MHz (ITU marine VHF); 25 kHz channel raster (some areas 12.5 kHz).",
+      icon: "ship"
+    },
+    ais: {
+      label: "AIS (ships)", defaultFreq: 161.975, mode: "GMSK",
+      heading: "AIS CLASS A/B",
+      status: "161.975 / 162.025 MHz: position reports",
+      rotationDeg: 90,
+      orientationTitle: "Vertical — coastal line-of-sight to AIS",
+      tip: "AIS uses two 25 kHz channels in the marine band; a vertical dipole at height can pull ship plots tens of km over salt water. Decode with your favorite AIS demod; compare both channels if traffic is sparse.",
+      listenBand: "161.975 & 162.025 MHz (AIS1/AIS2, 25 kHz); wider context 156–162 MHz marine allocation.",
+      icon: "ship"
+    },
+    railroad_na: {
+      label: "Railroad (N. America)", defaultFreq: 160.59, mode: "NFM",
+      heading: "AAR ROAD CHANNELS",
+      status: "~160–161 MHz: train & dispatch (AAR)",
+      rotationDeg: 90,
+      orientationTitle: "Vertical — locomotive & wayside antennas",
+      tip: "North American railroad voice is concentrated around 160–161 MHz with narrow FM; exact channels vary by road and region. Scout forums or frequency lists for your subdivision, then park the dipole with line of sight to the rails.",
+      listenBand: "~160–161 MHz (AAR-style road channels); expect 12.5 or 25 kHz NFM channels.",
+      icon: "train"
+    },
+    noaa_wx: {
+      label: "NOAA weather radio", defaultFreq: 162.55, mode: "NFM",
+      heading: "WX BAND (US)",
+      status: "162.4–162.55 MHz: continuous weather voice",
+      rotationDeg: 90,
+      orientationTitle: "Vertical — match NOAA VHF transmitters",
+      tip: "US NOAA weather radio is narrow FM on standardized channels. A vertical dipole favors the high tower sites; if you are between transmitters, try the adjacent 162.4 / 162.475 MHz slots.",
+      listenBand: "162.4–162.55 MHz (7 US WX channels, 25 kHz spacing).",
+      icon: "tower"
+    },
+    ism_433: {
+      label: "ISM / 433 MHz", defaultFreq: 433.92, mode: "NFM",
+      heading: "433 MHz ZOO",
+      status: "ISM: remotes, sensors, toys, LoRa splash",
+      rotationDeg: 45,
+      orientationTitle: "Slant — polarization is anyone's guess",
+      tip: "The 433 MHz ISM segment is a carnival of short bursty devices with random antenna quality. A slanted dipole is a practical compromise when you are fox-hunting unknown transmitters or watching wideband noise floors.",
+      listenBand: "433.05–434.79 MHz (EU ISM example; US Part 15 differs); bursty emitters often a few kHz to ~100 kHz wide.",
+      icon: "ham"
+    },
+    time_standard: {
+      label: "Time stations (HF)", defaultFreq: 10.0, mode: "AM",
+      heading: "WWV / WWVH CLASS",
+      status: "2.5–25 MHz: standard-frequency & time",
+      rotationDeg: 0,
+      orientationTitle: "Horizontal — NVIS or DX to the continent",
+      tip: "WWV, WWVH, and similar stations are great sanity checks for propagation. A horizontal dipole broadsided toward the transmitter path helps; at night expect skywave surprises on 5 and 10 MHz.",
+      listenBand: "WWV/WWVH 2.5, 5, 10, 15, 20, 25 MHz; AM voice + tones—only a few kHz RF width per carrier.",
+      icon: "radio"
+    }
+  };
+
+  var CATEGORY_GROUPS = [
+    { label: "Satellite & GNSS",       keys: ["satellite", "gnss_l1"] },
+    { label: "Aviation",               keys: ["airband", "ads_b", "acars", "military_air"] },
+    { label: "Maritime",               keys: ["marine_vhf", "ais"] },
+    { label: "Rail & land UHF",        keys: ["railroad_na", "ism_433"] },
+    { label: "Broadcast & weather",    keys: ["broadcast", "noaa_wx"] },
+    { label: "Ham & HF",               keys: ["ham_vhf", "ham_hf", "time_standard"] },
+  ];
+
+  var iconIds = ["iconSatellite","iconRadio","iconPlane","iconTower","iconHam","iconShip","iconTrain"];
+
+  function formatCm(cm) { return (Math.round(cm * 10) / 10).toFixed(1) + " cm"; }
+  function clampFreq(f) {
+    if (!isFinite(f) || f < F_MIN) return F_MIN;
+    if (f > F_MAX) return F_MAX;
+    return f;
+  }
+  function lengthsFromFreqMhz(fMhz) {
+    var totalM = HALF_WAVE_NUM / fMhz;
+    var totalCm = totalM * 100;
+    return { totalCm: totalCm, legCm: totalCm / 2 };
+  }
+
+  function updateIcons(iconKey) {
+    var map = { satellite:"iconSatellite", radio:"iconRadio", plane:"iconPlane",
+                tower:"iconTower", ham:"iconHam", ship:"iconShip", train:"iconTrain" };
+    var showId = map[iconKey] || "iconSatellite";
+    iconIds.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.setAttribute("display", id === showId ? "" : "none");
+    });
+  }
+
+  function updatePlannerStats(cfg, L) {
+    document.getElementById('statsBar').innerHTML =
+      '<span>FREQ&nbsp;<span class="stat-val">' + cfg.defaultFreq + ' MHz</span></span>' +
+      '<span>TOTAL&nbsp;<span class="stat-val">' + formatCm(L.totalCm).toUpperCase() + '</span></span>' +
+      '<span>PER LEG&nbsp;<span class="stat-val">' + formatCm(L.legCm).toUpperCase() + '</span></span>' +
+      '<span>MODE&nbsp;<span class="stat-val">' + cfg.mode + '</span></span>' +
+      '<span style="margin-left:auto;font-style:normal">' + cfg.status + '</span>';
+  }
+
+  function refresh() {
+    var key = document.getElementById('category').value;
+    var cfg = TARGETS[key];
+    if (!cfg) return;
+    var f = clampFreq(parseFloat(document.getElementById('frequency').value));
+    document.getElementById('frequency').value = String(f);
+    var L = lengthsFromFreqMhz(f);
+
+    document.getElementById('kpiTarget').textContent = cfg.label;
+    document.getElementById('kpiMode').textContent = cfg.mode;
+    document.getElementById('kpiTotal').textContent = formatCm(L.totalCm);
+    document.getElementById('kpiLeg').textContent = formatCm(L.legCm);
+    document.getElementById('visualHeading').textContent = cfg.heading;
+    document.getElementById('orientAxis').textContent = cfg.orientationTitle;
+    document.getElementById('orientTip').textContent = cfg.tip;
+    document.getElementById('listenBandText').textContent = cfg.listenBand || '';
+    document.getElementById('totalLenText').textContent = formatCm(L.totalCm).toUpperCase();
+    document.getElementById('freqDisplay').textContent = String(f);
+
+    var hlfPx = Math.min(L.legCm / MAX_LEG_CM, 1) * SVG_HALF_PX;
+    var w = Math.max(hlfPx, 18);
+    var legLeft  = document.getElementById('legLeft');
+    var legRight = document.getElementById('legRight');
+    legLeft.setAttribute('x', -w);
+    legLeft.setAttribute('width', w);
+    legRight.setAttribute('width', w);
+
+    var legLabel = formatCm(L.legCm).toUpperCase();
+    var tagL = document.getElementById('tagL');
+    var tagR = document.getElementById('tagR');
+    var tagLBg = document.getElementById('tagLBg');
+    var tagRBg = document.getElementById('tagRBg');
+    tagL.textContent = legLabel;
+    tagR.textContent = legLabel;
+    var tw = tagL.getComputedTextLength ? tagL.getComputedTextLength() + 18 : 56;
+    var tagW = Math.max(48, tw);
+    tagL.setAttribute('x', -w / 2);
+    tagR.setAttribute('x',  w / 2);
+    tagLBg.setAttribute('x', -w / 2 - tagW / 2);
+    tagLBg.setAttribute('width', tagW);
+    tagRBg.setAttribute('x',  w / 2 - tagW / 2);
+    tagRBg.setAttribute('width', tagW);
+
+    document.getElementById('dipoleRotate').setAttribute('transform', 'rotate(' + cfg.rotationDeg + ')');
+    updateIcons(cfg.icon);
+
+    var rings = document.getElementById('ringGroup');
+    if (document.getElementById('visualize').checked) {
+      rings.classList.remove('dimmed');
+    } else {
+      rings.classList.add('dimmed');
+    }
+
+    if (document.getElementById('tab-planner').classList.contains('active')) {
+      updatePlannerStats(cfg, L);
+    }
+  }
+
+  window.plannerRefresh = function() {
+    refresh();
+    var key = document.getElementById('category').value;
+    var cfg = TARGETS[key];
+    var f = clampFreq(parseFloat(document.getElementById('frequency').value));
+    cfg.defaultFreq = f;
+    var L = lengthsFromFreqMhz(f);
+    updatePlannerStats(cfg, L);
+  };
+
+  function fillCategoryOptions() {
+    var sel = document.getElementById('category');
+    sel.textContent = '';
+    CATEGORY_GROUPS.forEach(function(g) {
+      var og = document.createElement('optgroup');
+      og.label = g.label;
+      g.keys.forEach(function(key) {
+        if (!TARGETS[key]) return;
+        var opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = TARGETS[key].label;
+        og.appendChild(opt);
+      });
+      if (og.childNodes.length) sel.appendChild(og);
+    });
+    sel.value = 'satellite';
+  }
+
+  document.getElementById('category').addEventListener('change', function() {
+    var cfg = TARGETS[this.value];
+    document.getElementById('frequency').value = String(cfg.defaultFreq);
+    refresh();
+  });
+  document.getElementById('frequency').addEventListener('input', refresh);
+  document.getElementById('frequency').addEventListener('change', refresh);
+  document.getElementById('visualize').addEventListener('change', refresh);
+
+  fillCategoryOptions();
+  refresh();
+})();
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  TAB SWITCHING
+// ─────────────────────────────────────────────────────────────────────────────
+(function() {
+  var tabJournal = document.getElementById('tab-journal');
+  var tabPlanner = document.getElementById('tab-planner');
+  var btnJournal = document.getElementById('tabBtnJournal');
+  var btnPlanner = document.getElementById('tabBtnPlanner');
+
+  btnJournal.addEventListener('click', function() {
+    tabJournal.classList.add('active');
+    tabPlanner.classList.remove('active');
+    btnJournal.classList.add('active');
+    btnPlanner.classList.remove('active');
+    btnJournal.setAttribute('aria-selected', 'true');
+    btnPlanner.setAttribute('aria-selected', 'false');
+    renderGallery();
+  });
+
+  btnPlanner.addEventListener('click', function() {
+    tabPlanner.classList.add('active');
+    tabJournal.classList.remove('active');
+    btnPlanner.classList.add('active');
+    btnJournal.classList.remove('active');
+    btnPlanner.setAttribute('aria-selected', 'true');
+    btnJournal.setAttribute('aria-selected', 'false');
+    if (window.plannerRefresh) window.plannerRefresh();
+  });
+})();
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────────────────────────────────────
 renderGallery();
 </script>
 </body>
