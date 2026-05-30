@@ -1249,6 +1249,26 @@ function renderGallery() {
       listenBand: "≈137–138 MHz for NOAA APT; scan ~130–140 MHz for other LEO VHF downlinks.",
       icon: "satellite"
     },
+    iss_voice: {
+      label: "ISS Voice", defaultFreq: 145.800, mode: "FM",
+      heading: "ISS VOICE / ARISS",
+      status: "145.800 MHz — ISS crew & school contacts",
+      rotationDeg: 0,
+      orientationTitle: "Horizontal — broadside along pass track",
+      tip: "The ISS VHF downlink at 145.800 MHz is active during crew voice, ARISS school contacts, and occasionally SSTV events. Horizontal dipole broadside to the pass track works well; rotate for peak signal as the bird moves. Open squelch completely — the pass is short and signal varies fast. Check issfanclub.com for contact schedules.",
+      listenBand: "145.800 MHz (primary downlink); 145.825 MHz APRS on a separate preset. Doppler shift ±3.5 kHz at AOS/LOS — tune slightly high on approach, low on departure.",
+      icon: "satellite"
+    },
+    iss_aprs: {
+      label: "ISS APRS", defaultFreq: 437.550, mode: "APRS",
+      heading: "ISS APRS DIGIPEATER",
+      status: "437.550 MHz — packet relay from orbit",
+      rotationDeg: 0,
+      orientationTitle: "Horizontal — LEO pass geometry same as voice",
+      tip: "The ISS 70 cm APRS digipeater relays packets from ground stations worldwide during overhead passes. Tune to 437.550 MHz, decode with Direwolf or SDR#/GQRX → virtual audio → Direwolf. Pass duration is ~10 min max — have your decoder running before AOS. Doppler shift ±9.5 kHz; manually center if packets drop mid-pass.",
+      listenBand: "437.550 MHz (ISS APRS primary, 70 cm band); check AMSAT pass predictions for exact AOS/LOS and max elevation.",
+      icon: "satellite"
+    },
     broadcast: {
       label: "Broadcast FM", defaultFreq: 98.5, mode: "WFM",
       heading: "FM BROADCAST",
@@ -1392,7 +1412,7 @@ function renderGallery() {
   };
 
   var CATEGORY_GROUPS = [
-    { label: "Satellite & GNSS",       keys: ["satellite", "gnss_l1"] },
+    { label: "Satellite & GNSS",       keys: ["satellite", "iss_voice", "iss_aprs", "gnss_l1"] },
     { label: "Aviation",               keys: ["airband", "ads_b", "acars", "military_air"] },
     { label: "Maritime",               keys: ["marine_vhf", "ais"] },
     { label: "Rail & land UHF",        keys: ["railroad_na", "ism_433"] },
