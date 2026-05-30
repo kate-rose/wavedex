@@ -836,7 +836,9 @@ const BIRDS = [
     freq: '161.975 / 162.025 MHz',
     mode: 'AIS',
     desc: 'Ships transmitting name, position, course, speed. Columbia River grain barges, tankers, tugs. Decode with rtl_ais.',
-    catches: [],
+    catches: [
+      { date: "2026-05-30", location: "Columbia Gorge, WA", signal: "strong", notes: "Bright persistent orange stripe visible at ~161.975 MHz in GQRX waterfall. Solid digital beeping bursts — classic GMSK AIS character. Columbia River vessel traffic confirmed. LNA 18.8 dB, dipole vertical. Signal identified visually before audio decode. rtl_ais decode pending." },
+    ],
   },
   {
     id: 'marine-wx',
