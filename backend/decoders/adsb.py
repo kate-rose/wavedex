@@ -1,10 +1,11 @@
-"""ADS-B decoder — runs readsb for N seconds, returns parsed aircraft."""
+"""ADS-B decoder — readsb with direct USB or rtl_tcp client mode."""
 
 import json
 import subprocess
 import tempfile
 from pathlib import Path
 
+from decoders.config import RTL_TCP_HOST, RTL_TCP_PORT, using_tcp
 
 READSB = "readsb"
 _json_dir = Path(tempfile.gettempdir()) / "wavedex-adsb"
@@ -16,7 +17,6 @@ def scan(listen_seconds: int = 20) -> dict:
 
     cmd = [
         READSB,
-        "--device-type", "rtlsdr",
         "--gain", "auto",
         "--no-interactive",
         "--quiet",
@@ -25,12 +25,18 @@ def scan(listen_seconds: int = 20) -> dict:
         "--auto-exit", str(listen_seconds),
     ]
 
+    if using_tcp():
+        cmd += ["--device-type", "rtltcp",
+                "--rtlsdr-device", f"tcp://{RTL_TCP_HOST}:{RTL_TCP_PORT}"]
+    else:
+        cmd += ["--device-type", "rtlsdr"]
+
     try:
         subprocess.run(cmd, capture_output=True, timeout=listen_seconds + 15)
     except subprocess.TimeoutExpired:
         pass
     except FileNotFoundError:
-        return {"error": "readsb not found. Install with: brew install readsb"}
+        return {"error": "readsb not found. Install with: brew install readsb (Mac) or pkg install readsb (Termux)"}
 
     aircraft_file = _json_dir / "aircraft.json"
     if not aircraft_file.exists():
